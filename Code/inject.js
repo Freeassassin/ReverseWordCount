@@ -2,8 +2,18 @@ var counterContainer = document.getElementById("kix-documentmetrics-widget-conte
 var counterNumReal = null;
 var wordLim;
 var timer = null;
-function reverseNum()
+function sleep(ms) 
 {
+      return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function reverseNum()
+{
+	if (counterContainer == null) 
+	{
+		await sleep(2000);
+		var counterContainer = document.getElementById("kix-documentmetrics-widget-content");
+	}
 	if (counterContainer.childElementCount > 0) 
 	{
 		var countType = counterContainer.innerText.split(" ");
