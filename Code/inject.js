@@ -1,6 +1,7 @@
 var counterContainer = document.getElementById("kix-documentmetrics-widget-content");
 var counterNumReal = null;
 var wordLim;
+var exclude;
 var timer = null;
 function sleep(ms) 
 {
@@ -16,6 +17,12 @@ async function reverseNum()
 	}
 	if (counterContainer.childElementCount > 0) 
 	{
+
+		if (exclude) 
+		{
+			wordLim = wordLim + counterNumReal;
+			exclude=false;
+		}
 		var countType = counterContainer.innerText.split(" ");
 		if (countType[1] == "words" || countType[1] == "word") 
 		{;
@@ -35,8 +42,14 @@ async function reverseNum()
 
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse)
 {
-	wordLim = parseInt(message.words);
-	pageLim = parseInt(message.pages);
+	if (message.words) 
+	{
+		wordLim = parseInt(message.words);
+	}
+	if (message.exclude)
+	{
+		exclude = message.exclude;		
+	}
 	if (timer != null) 
 	{
 		clearInterval(timer)
@@ -46,7 +59,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse)
 	{
 		timer = setInterval(function(){reverseNum();},500);
 	}
-	sendResponse({farewell: "goodbye"});
+	sendResponse({wordLim: wordLim});
 });
 
 

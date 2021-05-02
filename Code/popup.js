@@ -1,17 +1,8 @@
-function getQueryVar(variable)
-{
-       var query = window.location.search.substring(1);
-       var vars = query.split("&");
-       for (var i=0;i<vars.length;i++) 
-       {
-           var pair = vars[i].split("=");
-           if(pair[0] == variable){return pair[1];}
-       }
-       return(false);
-}
 document.addEventListener('DOMContentLoaded', function() 
 {
     var submit = document.getElementById('submit');
+
+    var exclude = document.getElementById('exclude');
 
     submit.addEventListener('click', function() 
     {
@@ -28,5 +19,21 @@ document.addEventListener('DOMContentLoaded', function()
     	  	});
     	});  
     	document.getElementById("words").value = "";  	 
+    });
+
+    exclude.addEventListener('click', function() 
+    {
+      let msg = 
+      {
+        exclude: true
+      }
+      
+      chrome.tabs.query({active: true, currentWindow: true}, function(tabs) 
+      {
+        chrome.tabs.sendMessage(tabs[0].id, msg, function(response) 
+        {
+            console.log(response);
+          });
+      });    
     });
 });
